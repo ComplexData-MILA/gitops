@@ -1,0 +1,50 @@
+{{- range $index, $nodepool := .Values.nodepools }}
+apiVersion: rke-machine-config.cattle.io/v1
+kind: OpenstackConfig
+metadata:
+  name: {{ $nodepool.name }}
+  namespace: fleet-default
+# applicationCredentialId: ""
+# applicationCredentialName: ""
+# applicationCredentialSecret: ""
+authUrl: {{ $.Values.openstack.authUrl }}
+availabilityZone: {{ $nodepool.availabilityZone }}
+bootFromVolume: {{ $nodepool.bootFromVolume }}
+# cacert: ""
+configDrive: false
+# domainId: ""
+domainName: {{ $.Values.openstack.domainName }}
+endpointType: publicURL
+# flavorId: ""
+flavorName: {{ $nodepool.flavorName }}
+# floatingipPool: ""
+# imageId: ""
+imageName: {{ $nodepool.imageName }}
+insecure: true
+ipVersion: "4"
+keypairName: {{ $.Values.openstack.keypairName }}
+# netId: ""
+netName: {{ $.Values.openstack.netName }}
+novaNetwork: false
+# password: ""
+privateKeyFile: {{ $.Values.openstack.privateKeyFile }}
+region: {{ $.Values.openstack.region }}
+secGroups: {{ $.Values.openstack.secGroups }}
+sshPort: "22"
+sshUser: ubuntu
+# tenantDomainId: ""
+# tenantDomainName: ""
+# tenantId: ""
+tenantName: {{ $.Values.openstack.tenantName }}
+userDataFile: ""
+userDomainId: ""
+userDomainName: ""
+userId: ""
+username: {{ $.Values.openstack.username }}
+volumeDevicePath: ""
+volumeId: ""
+volumeName: ""
+volumeSize: "{{ $nodepool.volumeSize }}"
+volumeType: ""
+---
+{{- end }}

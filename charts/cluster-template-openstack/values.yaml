@@ -1,0 +1,108 @@
+# cluster specific values
+cluster:
+  # specify cluster name
+  name: template-rke2
+
+  # specify cluster labels
+  labels: {}
+
+  # specify cluster annotations
+  annotations: {}
+
+# specify cloud credential secret name, do not need to be provided if using custom driver
+cloudCredentialSecretName: "openstack-cloud-credential"
+cloudprovider: "openstack" # TODO: figure out which {{jinja bullshit}} to remove to make this unneccessary
+
+kubernetesVersion: ""
+
+# general RKE options
+rke:
+  # enable local auth endpoint
+  localClusterAuthEndpoint:
+    enabled: false
+  # specify fqdn of local access endpoint
+  # fqdn: foo.bar.example
+  # specify cacert of local access endpoint
+  # caCerts: ""
+
+# specify user principal ids to be assiged as cluster members
+# clusterMembers:
+# - principalName: "local://u-z8zl5"
+#   roleTemplateName: "cluster-member"
+
+# enable monitoring
+monitoring:
+  enabled: false
+  # specify which version to install, can be semver range. If version is empty or is semver range, it will pick up the latest version.
+  # version: ""
+  # specify cutsom values set
+  # values:
+  #   foo: bar
+
+openstack:
+  # applicationCredentialId: ""
+  # applicationCredentialName: ""
+  # applicationCredentialSecret: ""
+  authUrl: ""
+  # cacert: ""
+  # domainId: ""
+  domainName: ""
+  endpointType: publicURL
+  insecure: true
+  keypairName: ""
+  netId: ""
+  netName: ""
+  novaNetwork: false
+  password: ""
+  privateKeyFile: ""
+  region: ""
+  secGroups: ""
+  sshPort: "22"
+  sshUser: root
+  tenantDomainId: ""
+  tenantDomainName: ""
+  tenantId: ""
+  tenantName: ""
+  userDomainId: ""
+  userDomainName: ""
+  userId: ""
+  username: ""
+
+
+# Specify nodepool options. Can add multiple node groups, specify etcd, controlplane and worker roles.
+nodepools: []
+# nodepools:
+# - name: azure-nodepool-1
+#   etcd: true
+#   controlplane: true
+#   worker: true
+
+#   # specify node labels
+#   labels: {}
+
+#   # specify node taints
+#   taints: {}
+#   # specify nodepool size
+#   quantity: 1
+#   # Pause node pool
+#   paused: false
+#   # specify displayName
+#   # displayName: ""
+#   availabilityZone: Compute
+#   bootFromVolume: false
+#   configDrive: false
+#   # flavorId: ""
+#   flavorName: c1-7.5gb-36
+#   floatingipPool: ""
+#   # imageId: ""
+#   imageName: Ubuntu-20.04.3-Focal-x64-2021-12
+
+#   ipVersion: "4"
+
+#   userDataFile: ""
+#   volumeDevicePath: ""
+#   volumeId: ""
+#   volumeName: ""
+#   volumeSize: "0"
+#   volumeType: ""
+
