@@ -3,7 +3,6 @@ kind: NodeDriver
 metadata:
   annotations:
     lifecycle.cattle.io/create.node-driver-controller: "true"
-    helm.sh/hook: pre-install
   name: openstack
 spec:
   active: true
