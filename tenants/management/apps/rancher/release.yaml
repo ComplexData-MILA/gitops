@@ -6,6 +6,8 @@ metadata:
 spec:
   targetNamespace: cattle-system
   releaseName: rancher
+  dependsOn:
+    - name: cert-manager
   chart:
     spec:
       chart: rancher
@@ -16,7 +18,7 @@ spec:
   interval: 1h0m0s
   install:
     remediation:
-      retries: 3
+      retries: -1
   values:
     hostname: rancher.k8s.arbutus
     replicas: 3
