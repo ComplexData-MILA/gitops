@@ -1,0 +1,14 @@
+{{- if not (lookup "management.cattle.io/v3" "NodeDriver" "" "openstack") }}
+apiVersion: management.cattle.io/v3
+kind: NodeDriver
+metadata:
+  annotations:
+    lifecycle.cattle.io/create.node-driver-controller: "true"
+    helm.sh/hook: pre-install
+  name: openstack
+spec:
+  active: true
+  builtin: true
+  displayName: openstack
+  url: local://
+{{- end }}
