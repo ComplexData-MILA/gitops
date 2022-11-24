@@ -27,7 +27,7 @@ keypairName: {{ $.Values.openstack.keypairName }}
 netName: {{ $.Values.openstack.netName }}
 novaNetwork: false
 # password: ""
-privateKeyFile: {{ $.Values.openstack.privateKeyFile }}
+privateKeyFile: {{ toYaml $.Values.openstack.privateKeyFile | indent 2 }}
 region: {{ $.Values.openstack.region }}
 secGroups: {{ $.Values.openstack.secGroups }}
 sshPort: "22"
