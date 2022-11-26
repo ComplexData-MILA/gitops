@@ -20,7 +20,7 @@ spec:
     remediation:
       retries: -1
   values:
-    hostname: rancher.k8s.arbutus
+    hostname: rancher.${CLUSTER_DOMAIN}
     replicas: 3
     bootstrapPassword: testPassword # TODO: Change and encrypt
     ingress:
