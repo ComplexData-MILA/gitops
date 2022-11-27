@@ -19,10 +19,20 @@ spec:
   kubernetesVersion: {{ .Values.kubernetesVersion }}
   {{- end }}
   # enable network policy
-  enableNetworkPolicy: true
+  enableNetworkPolicy: {{ .Values.enableNetworkPolicy }}
+  # enable or disable ACE
+  {{- if (.Values.localClusterAuthEndpoint).enabled }}
+  localClusterAuthEndpoint:
+    enabled: {{ .Values.localClusterAuthEndpoint.enabled }}
+    fqdn: {{ .Values.localClusterAuthEndpoint.fqdn }}
+    caCerts: {{ .Values.localClusterAuthEndpoint.caCerts }}
+  {{- end }}
   # specify rancher helm chart values deployed into downstream cluster
   # rancherValues: {}
   rkeConfig:
+    {{- if .Values.additionalManifest }}
+    additionalManifest: {{ toYaml $.Values.additionalManifest | nindent 4 }}
+    {{- end }}
     {{- if ne .Values.cloudprovider "custom" }}
     machinePools:
     {{- if .Values.nodepools }} {{ range $index, $nodepool := .Values.nodepools }}
@@ -33,7 +43,7 @@ spec:
       name: {{ $nodepool.name }}
       machineConfigRef:
         kind: OpenstackConfig
-        name: {{ $nodepool.name }}
+        name: {{ $.Values.cluster.name }}-{{ $nodepool.name }}
       paused: {{ $nodepool.paused }}
       displayName: {{ $nodepool.displayName }}
       {{- if $nodepool.rollingUpdate }}
@@ -78,11 +88,44 @@ spec:
       {{- end }}
     {{- end }}
     {{- end }}
+    # machineGlobalConfig:
+    #   cni: canal
+    #   disable-kube-proxy: false
+    #   etcd-expose-metrics: false
+    #   profile: null
+
     machineGlobalConfig:
-      cni: canal
-      disable-kube-proxy: false
-      etcd-expose-metrics: false
-      profile: null
+      # CNI Plugin to deploy, one of none, canal, cilium (default: "canal")
+      {{- if (((.Values.rke).machineGlobalConfig).cni) }}
+      cni: {{ .Values.rke.machineGlobalConfig.cni }}
+      {{- else }}
+      cni: calico
+      {{- end }}
+      {{- if (((.Values.rke).machineGlobalConfig).tls_san) }}
+      tls-san:
+        {{- range .Values.rke.machineGlobalConfig.tls_san }}
+        - {{ . }}
+        {{- end }}
+      {{- end }}
+      {{- if (((.Values.rke).machineGlobalConfig).controller_manager_args) }}
+      kube-controller-manager-arg:
+        {{- range .Values.rke.machineGlobalConfig.controller_manager_args }}
+        - {{ . }}
+        {{- end }}
+      {{- end }}
+    {{ if ((.Values.rke).machineSelectorConfig) }}
+    machineSelectorConfig:
+      {{- if (((.Values.rke).machineSelectorConfig).cloud_provider) }}
+      - config:
+          cloud-provider-name: {{ .Values.rke.machineSelectorConfig.cloud_provider }}
+          {{- if (((.Values.rke).machineSelectorConfig).kubelet_arg) }}
+          kubelet-arg:
+            {{- range .Values.rke.machineSelectorConfig.kubelet_arg }}
+            - {{ . }}
+            {{- end }}
+          {{- end }}
+      {{- end }}
+    {{- end }}
     controlPlaneConfig:
       # Path to the file that defines the audit policy configuration
       # audit-policy-file: ""
@@ -93,7 +136,7 @@ spec:
       # Cluster Domain (default: "cluster.local")
       # cluster-domain: ""
       # CNI Plugin to deploy, one of none, canal, cilium (default: "canal")
-      cni: canal
+      # cni: canal
       # Do not deploy packaged components and delete any deployed components (valid items: rke2-coredns, rke2-ingress-nginx, rke2-kube-proxy, rke2-metrics-server)
       # disable: false
       # Disable automatic etcd snapshots
@@ -149,12 +192,6 @@ spec:
         # cloud-provider-name: ""
         # Cloud provider configuration file path
         # cloud-provider-config: ""
-    {{- if .Values.rke.localClusterAuthEndpoint.enabled }}
-    localClusterAuthEndpoint:
-      enabled: {{ .Values.rke.localClusterAuthEndpoint.enabled }}
-      fqdn: {{ .Values.rke.localClusterAuthEndpoint.fqdn }}
-      caCerts: {{ .Values.rke.localClusterAuthEndpoint.caCerts }}
-    {{- end }}
     upgradeStrategy:
       controlPlaneDrainOptions:
         enabled: false

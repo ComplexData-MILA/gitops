@@ -1,19 +1,73 @@
+# apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+# kind: Kustomization
+# metadata:
+#   name: apps
+#   namespace: flux-system
+# spec:
+#   interval: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./tenants/management/apps
+#   prune: true
+#   wait: true
+#   timeout: 10m
+#   dependsOn:
+#     - name: infrastructure
+#   decryption:
+#     provider: sops
+#     secretRef:
+#       name: sops-age
+#   postBuild:
+#     substituteFrom:
+#       - kind: ConfigMap
+#         name: cluster-settings
+#       - kind: Secret
+#         name: cluster-secrets
+---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: apps
+  name: rancher
   namespace: flux-system
 spec:
   interval: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./tenants/management/apps
+  path: ./tenants/management/apps/rancher
   prune: true
   wait: true
   timeout: 10m
   dependsOn:
     - name: infrastructure
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+      - kind: Secret
+        name: cluster-secrets
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: workloads
+  namespace: flux-system
+spec:
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./tenants/management/apps/workload-ml
+  prune: true
+  wait: true
+  timeout: 10m
+  dependsOn:
+    - name: rancher
   decryption:
     provider: sops
     secretRef:

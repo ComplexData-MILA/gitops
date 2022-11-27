@@ -2,49 +2,58 @@
 apiVersion: rke-machine-config.cattle.io/v1
 kind: OpenstackConfig
 metadata:
-  name: {{ $nodepool.name }}
+  name: {{ $.Values.cluster.name }}-{{ $nodepool.name }}
   namespace: fleet-default
-# applicationCredentialId: ""
-# applicationCredentialName: ""
-# applicationCredentialSecret: ""
-authUrl: {{ $.Values.openstack.authUrl }}
+applicationCredentialId: {{ $nodepool.applicationCredentialId }}
+applicationCredentialName: {{ $nodepool.applicationCredentialName }}
+applicationCredentialSecret: {{ $nodepool.applicationCredentialSecret }}
+authUrl: {{ $nodepool.authUrl }}
 availabilityZone: {{ $nodepool.availabilityZone }}
 bootFromVolume: {{ $nodepool.bootFromVolume }}
-# cacert: ""
-configDrive: false
-# domainId: ""
-domainName: {{ $.Values.openstack.domainName }}
-endpointType: publicURL
-# flavorId: ""
+cacert: {{ $nodepool.cacert }}
+configDrive: {{ $nodepool.configDrive }}
+common:
+{{- if $nodepool.labels }}
+  labels:
+{{ toYaml $nodepool.labels | indent 4 }}
+{{- end }}
+{{- if $nodepool.taints }}
+  taints:
+{{ toYaml $nodepool.taints | indent 4 }}
+{{- end }}
+domainId: {{ $nodepool.domainId }}
+domainName: {{ $nodepool.domainName }}
+endpointType: {{ $nodepool.endpointType }}
+flavorId: {{ $nodepool.flavorId }}
 flavorName: {{ $nodepool.flavorName }}
-# floatingipPool: ""
-# imageId: ""
+floatingipPool: {{ $nodepool.floatingipPool }}
+imageId: {{ $nodepool.imageId }}
 imageName: {{ $nodepool.imageName }}
-insecure: true
-ipVersion: "4"
-keypairName: {{ $.Values.openstack.keypairName }}
-# netId: ""
-netName: {{ $.Values.openstack.netName }}
+insecure: {{ $nodepool.insecure }}
+ipVersion: "{{ $nodepool.ipVersion | default 4 }}"
+keypairName: {{ $nodepool.keypairName }}
+netId: {{ $nodepool.netId }}
+netName: {{ $nodepool.netName }}
 novaNetwork: false
-# password: ""
-privateKeyFile: {{ toYaml $.Values.openstack.privateKeyFile | indent 2 }}
-region: {{ $.Values.openstack.region }}
-secGroups: {{ $.Values.openstack.secGroups }}
-sshPort: "22"
-sshUser: ubuntu
-# tenantDomainId: ""
-# tenantDomainName: ""
-# tenantId: ""
-tenantName: {{ $.Values.openstack.tenantName }}
-userDataFile: ""
-userDomainId: ""
-userDomainName: ""
-userId: ""
-username: {{ $.Values.openstack.username }}
-volumeDevicePath: ""
-volumeId: ""
-volumeName: ""
+password: {{ $nodepool.password }}
+privateKeyFile: {{ toYaml $nodepool.privateKeyFile | indent 2 }}
+region: {{ $nodepool.region }}
+secGroups: {{ $nodepool.secGroups }}
+sshPort: "{{ $nodepool.sshPort }}"
+sshUser: {{ $nodepool.sshUser }}
+tenantDomainId: {{ $nodepool.tenantDomainId }}
+tenantDomainName: {{ $nodepool.tenantDomainName }}
+tenantId: {{ $nodepool.tenantId }}
+tenantName: {{ $nodepool.tenantName }}
+userDataFile: {{ toYaml $nodepool.userDataFile | indent 2 }}
+userDomainId: {{ $nodepool.userDomainId }}
+userDomainName: {{ $nodepool.userDomainName }}
+userId: {{ $nodepool.userId }}
+username: {{ $nodepool.username }}
+volumeDevicePath: {{ $nodepool.volumedevicepath }}
+volumeId: {{ $nodepool.volumeId }}
+volumeName: {{ $nodepool.volumeName }}
 volumeSize: "{{ $nodepool.volumeSize }}"
-volumeType: ""
+volumeType: {{ $nodepool.volumeType }}
 ---
 {{- end }}
