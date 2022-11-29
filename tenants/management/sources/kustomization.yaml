@@ -5,4 +5,3 @@ namespace: flux-system
 resources:
   - ../../base/sources
   - rancher.yaml
-  - kyverno.yaml
