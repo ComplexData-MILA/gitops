@@ -62,7 +62,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./tenants/management/apps/workload-ml
+  path: ./tenants/management/apps/workload-clusters
   prune: true
   wait: true
   timeout: 10m

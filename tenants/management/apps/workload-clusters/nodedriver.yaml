@@ -1,0 +1,8 @@
+apiVersion: management.cattle.io/v3
+kind: NodeDriver
+metadata:
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: merge
+  name: openstack
+spec:
+  active: true
