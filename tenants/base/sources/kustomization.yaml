@@ -5,4 +5,5 @@ namespace: flux-system
 resources:
   - bitnami.yaml
   - jetstack.yaml
+  - kured.yaml
   - kyverno.yaml
