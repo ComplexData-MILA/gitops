@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: cluster-settings
   namespace: flux-system
-  data:
-    CLUSTER_NAME: management
+data:
+  CLUSTER_NAME: management
