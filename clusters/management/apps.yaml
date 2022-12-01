@@ -28,14 +28,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: rancher
+  name: management
   namespace: flux-system
 spec:
   interval: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./tenants/management/apps/rancher
+  path: ./bundles/management
   prune: true
   wait: true
   timeout: 10m
@@ -51,30 +51,35 @@ spec:
         name: cluster-settings
       - kind: Secret
         name: cluster-secrets
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
-kind: Kustomization
-metadata:
-  name: workloads
-  namespace: flux-system
-spec:
-  interval: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./tenants/management/apps/workload-clusters
-  prune: true
-  wait: true
-  timeout: 10m
-  dependsOn:
-    - name: rancher
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
-  postBuild:
-    substituteFrom:
-      - kind: ConfigMap
-        name: cluster-settings
-      - kind: Secret
-        name: cluster-secrets
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+# kind: Kustomization
+# metadata:
+#   name: workloads
+#   namespace: flux-system
+# spec:
+#   interval: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./tenants/management/apps/workload-clusters
+#   prune: true
+#   wait: true
+#   timeout: 10m
+#   dependsOn:
+#     - name: rancher
+#   decryption:
+#     provider: sops
+#     secretRef:
+#       name: sops-age
+#   healthChecks:
+#     - apiVersion: provisioning.cattle.io/v1
+#       kind: Cluster
+#       name: cdlab-ml
+#       namespace: fleet-default
+#   postBuild:
+#     substituteFrom:
+#       - kind: ConfigMap
+#         name: cluster-settings
+#       - kind: Secret
+#         name: cluster-secrets

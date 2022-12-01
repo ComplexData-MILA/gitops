@@ -8,13 +8,13 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./components/infrastructure/
+  path: ./bundles/infrastructure/
   prune: true
   wait: true
   timeout: 10m
   dependsOn:
     - name: config
-    - name: namespaces
+    - name: crds
     - name: sources
   decryption:
     provider: sops
