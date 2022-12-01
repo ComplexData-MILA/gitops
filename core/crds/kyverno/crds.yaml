@@ -8,7 +8,7 @@ spec:
   interval: 30m
   url: https://github.com/kyverno/kyverno.git
   ref:
-    tag: v1.8.1
+    tag: v1.8.2
   ignore: |
     /*
     !/charts/kyverno/templates/crds.yaml
