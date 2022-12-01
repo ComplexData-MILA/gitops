@@ -41,7 +41,7 @@ spec:
       workerRole: {{ $nodepool.worker }}
       quantity: {{ $nodepool.quantity }}
       name: {{ $nodepool.name }}
-      unhealthyNodeTimeout: {{ $nodepool.unhealthyNodeTimeout }}
+      unhealthyNodeTimeout: "{{ $nodepool.unhealthyNodeTimeout }}"
       machineConfigRef:
         kind: OpenstackConfig
         name: {{ $.Values.cluster.name }}-{{ $nodepool.name }}
