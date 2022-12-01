@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - apps.yaml
   - policies.yaml
+  - rancher-setup.yaml

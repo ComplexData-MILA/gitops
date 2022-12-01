@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+    name: openstack-config
+    namespace: flux-system
+stringData:
+    authUrl: ENC[AES256_GCM,data:WKMVciV/lkxIW2VlIYtxFVi3etl8li00P/4MI9ZZf7RZcL4zzz8cgLkqAYxwxw==,iv:9+NtiRUC8Uo9QxCxH+IzNCS6aqnd/18Q5DgD8wdeLpw=,tag:ieaAi0osjMEdDULsaaVQXg==,type:str]
+    domainName: ENC[AES256_GCM,data:EcAudg==,iv:YNZNOy9bforUKmQWFLj+8wJXESwT+RsZruVglWqi6GQ=,tag:IVmKkTm9RzewXj3xiCncGg==,type:str]
+    keypairName: ENC[AES256_GCM,data:TaCDFktMFNz4vg==,iv:SOfcQ2HPjhh4m6RtuCQvu/vvxawfIoWvvbSBdV9R7iY=,tag:zpkQ5L8bySmq7rgJZam3sA==,type:str]
+    netName: ENC[AES256_GCM,data:GsOXpwc0HgDyNbJk1uS9uyLFFxMX1g==,iv:QTzjbAX6Dl4XZZkMpshXKxbVvdMUyNX4cRVzhXLD+0M=,tag:kX5WSrCi1NC7wCsf3QIH0w==,type:str]
+    region: ENC[AES256_GCM,data:919Fszn5GriI,iv:+M1B4gzCWWSND2Z6GdJANsSRg4D2/5QiAPLhmnDxY6A=,tag:IiKmlpIXHBJvJ9X4DLRubA==,type:str]
+    secGroups: ENC[AES256_GCM,data:nRdnq8Xa/KcED4brqgn2zMs=,iv:BhKursGubmClSIg1nmoPEEFtPzzcqQVFXlJMuQgDNRU=,tag:GBuQaxynWGr/zmznMwbihQ==,type:str]
+    tenantName: ENC[AES256_GCM,data:5sKZJWvlis3UMq5j1Ds=,iv:gOLTchWlRI0sP27woX8pygp7syXM+Y8QRaBM6RAFL5E=,tag:TwNTTYGAOIyqPp9dvYyaNA==,type:str]
+    username: ENC[AES256_GCM,data:ONCWiGw59h8=,iv:KWcKQassM5dOHI8FtlGFX/v9RdBYfpusQADnvmWfugc=,tag:ICZBZLVE/W2+OdOdtJLvuA==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1zrvpu8z7cj5dtk5869vamdcv7n6tev4032dvuqgq3qzgrjqrm5rqw55j5e
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA1Z3BkZjhHbWYyVHI1dzhu
+            R0RBWWlNTGQ5cUFrTkcxUG45Y0pkOU1EY1hZCi9CKzFuU2xWUmtpU1ZtdWJHb2cv
+            VllSUDJObFRxdmpqbDRzdndMU1pJdkUKLS0tIE1wV0k2QldoMWM5Z3ZxeWlvVDRI
+            MUM5WCt6dzkwOUN0SkJ5M0VEanVKS2MKKHqD/3Ae1KQV7zOjSKkNBFvRfd5D8tBx
+            dfj4Uh+vUNHpyH3VxD5tnAA2WeRt/jgbB/ZNWtwZoKQHuTcbTYGyAg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2022-12-01T18:05:10Z"
+    mac: ENC[AES256_GCM,data:XWvXoS3xRYZ8NTRMdTbhJjq/n5x1pzPXkKhaB7PVbRZkPV/IfmuWY0YbVmfJ9i+wN/KWJclQPW6RAt9Xb9LS8sbDC+V9S8Ypv26XFGq0vQZLTGmVCVy3yoxFt3MQU6Uo+Mtj5Y19h31ZVlSNueIUuiuJC/mBh736GQ6vMGc9sns=,iv:dSsqVbehq4WkNp25hqT6zpSsb+eF2zrqngpyZR0RC2Y=,tag:T3IaV0+8JheODO05PTT53A==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.7.2
