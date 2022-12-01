@@ -18,6 +18,16 @@ spec:
         - resources:
             kinds:
             - provisioning.cattle.io/v1/Cluster
+    exclude:
+      any:
+      - resources:
+          namespaces:
+          - fleet-local
+    preconditions:
+      any:
+      - key: "{{ request.object.status.ready || false }}"
+        operator: Equals
+        value: true
     context:
     - name: rancherToken
       apiCall:

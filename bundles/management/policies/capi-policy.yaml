@@ -28,36 +28,3 @@ spec:
       clone:
         namespace: "{{request.object.metadata.namespace}}"
         name: "{{request.object.metadata.name}}-kubeconfig"
-  
-  - name: generate-autoscaling-config
-    match:
-        all:
-        - resources:
-            kinds:
-            - provisioning.cattle.io/v1/Cluster
-    context:
-    - name: rancherToken
-      apiCall:
-        urlPath: "/api/v1/namespaces/{{request.object.metadata.namespace}}/secrets/{{request.object.status.clientSecretName}}"
-        jmesPath: 'base64_decode(data.token)'
-    generate:
-      apiVersion: v1
-      kind: ConfigMap
-      name: "{{request.object.metadata.name}}-autoscaler-cloud-config"
-      namespace: "{{request.object.metadata.namespace}}"
-      synchronize: true
-      data:
-        kind: ConfigMap
-        metadata:
-          ownerReferences:
-          - apiVersion: provisioning.cattle.io/v1
-            kind: Cluster
-            name: "{{request.object.metadata.name}}"
-            uid: "{{request.object.metadata.uid}}"
-        data:
-          url: https://rancher.cattle-system.svc.cluster.local
-          token: "{{rancherToken}}"
-          # name and namespace of the clusters.provisioning.cattle.io resource on the
-          # rancher server
-          clusterName: "{{request.object.metadata.name}}"
-          clusterNamespace: "{{request.object.metadata.namespace}}"
