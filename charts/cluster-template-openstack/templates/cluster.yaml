@@ -192,7 +192,7 @@ spec:
         # cloud-provider-name: ""
         # Cloud provider configuration file path
         # cloud-provider-config: ""
-    unhealthyNodeTimeout: {{ .Values.unhealthyNodeTimeout }}
+    unhealthyNodeTimeout: {{ $nodepool.unhealthyNodeTimeout }}
     upgradeStrategy:
       controlPlaneDrainOptions:
         enabled: false
