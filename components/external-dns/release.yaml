@@ -35,3 +35,8 @@ spec:
       name: cluster-secrets
       valuesKey: CLUSTER_DOMAIN
       targetPath: domainFilters[0]
+    - kind: ConfigMap
+      name: cluster-config
+      valuesKey: CLUSTER_NAME
+      targetPath: txtOwnerId
+      optional: true
