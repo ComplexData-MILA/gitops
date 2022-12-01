@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - autoscaler-policy.yaml
   - capi-policy.yaml
+  - nodedriver.yaml
