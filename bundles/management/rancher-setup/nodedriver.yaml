@@ -1,4 +1,4 @@
-# sneak this into policies - ensures that Openstack node driver is activated before trying to deploy workload clusters
+# ensures that Openstack node driver is activated before trying to deploy workload clusters
 
 apiVersion: management.cattle.io/v3
 kind: NodeDriver
