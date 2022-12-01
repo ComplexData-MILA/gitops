@@ -5,4 +5,4 @@ resources:
   - ../../components/external-dns
   - ../../components/kured
   - ../../components/kyverno
-  - ../../components/reloader
+  # - ../../components/reloader
