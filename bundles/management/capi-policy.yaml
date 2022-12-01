@@ -1,0 +1,63 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: sync-fleet-kubeconfigs
+  annotations:
+    policies.kyverno.io/title: Sync Fleet Kubeconfigs
+    policies.kyverno.io/category: Rancher
+    policies.kyverno.io/subject: Secret
+    policies.kyverno.io/description: >-
+      This policy will synchronize kubeconfigs for Rancher-provisioned
+      clusters to the flux-system namespace so that flux can bootstrap
+      downstream clusters.
+spec:
+  generateExistingOnPolicyUpdate: true
+  rules:
+  - name: sync-fleet-kubeconfigs
+    match:
+        all:
+        - resources:
+            kinds:
+            - provisioning.cattle.io/v1/Cluster
+    generate:
+      apiVersion: v1
+      kind: Secret
+      name: "{{request.object.metadata.name}}-kubeconfig"
+      namespace: flux-system # "{{request.object.metadata.name}}"
+      synchronize: true
+      clone:
+        namespace: "{{request.object.metadata.namespace}}"
+        name: "{{request.object.metadata.name}}-kubeconfig"
+  
+  - name: generate-autoscaling-config
+    match:
+        all:
+        - resources:
+            kinds:
+            - provisioning.cattle.io/v1/Cluster
+    context:
+    - name: rancherToken
+      apiCall:
+        urlPath: "/api/v1/namespaces/{{request.object.metadata.namespace}}/secrets/{{request.object.status.clientSecretName}}"
+        jmesPath: 'base64_decode(data.token)'
+    generate:
+      apiVersion: v1
+      kind: ConfigMap
+      name: "{{request.object.metadata.name}}-autoscaler-cloud-config"
+      namespace: "{{request.object.metadata.namespace}}"
+      synchronize: true
+      data:
+        kind: ConfigMap
+        metadata:
+          ownerReferences:
+          - apiVersion: provisioning.cattle.io/v1
+            kind: Cluster
+            name: "{{request.object.metadata.name}}"
+            uid: "{{request.object.metadata.uid}}"
+        data:
+          url: https://rancher.cattle-system.svc.cluster.local
+          token: "{{rancherToken}}"
+          # name and namespace of the clusters.provisioning.cattle.io resource on the
+          # rancher server
+          clusterName: "{{request.object.metadata.name}}"
+          clusterNamespace: "{{request.object.metadata.namespace}}"
