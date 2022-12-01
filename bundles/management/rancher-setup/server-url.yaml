@@ -1,0 +1,7 @@
+apiVersion: management.cattle.io/v3
+kind: Setting
+metadata:
+  name: server-url
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: merge
+value: https://rancher.internal.${CLUSTER_DOMAIN}

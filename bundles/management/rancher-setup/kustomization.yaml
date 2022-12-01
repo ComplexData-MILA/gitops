@@ -4,3 +4,4 @@ resources:
   - cloud-credential.sops.yaml
   - nodedriver.yaml
   - openstack-config.sops.yaml
+  - server-url.yaml
