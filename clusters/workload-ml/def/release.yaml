@@ -61,7 +61,7 @@ spec:
         controlplane: true
         worker: true # false
 
-        unhealthyNodeTimeout: 600
+        unhealthyNodeTimeout: "600"
         machineDeploymentAnnotations:
           cluster.provisioning.cattle.io/autoscaler-resource-cpu: "2"
           cluster.provisioning.cattle.io/autoscaler-resource-ephemeral-storage: 36Gi

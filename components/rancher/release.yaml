@@ -23,9 +23,10 @@ spec:
     hostname: rancher.internal.${CLUSTER_DOMAIN}
     replicas: 3
     bootstrapPassword: testPassword # TODO: Change and encrypt
-    extraEnv:
-      - name: CATTLE_FEATURES
-        value: embedded-cluster-api=true
+    features: embedded-cluster-api=true
+    # extraEnv:
+    #   - name: CATTLE_FEATURES
+    #     value: 
     tls: ingress
     ingress:
       enabled: true
