@@ -29,9 +29,9 @@ spec:
     tls: ingress
     ingress:
       enabled: true
-      extraAnnotations:
-        cert-manager.io/issuer: letsencrypt-staging
-        cert-manager.io/issuer-kind: ClusterIssuer
-      tls:
-        source: secret
-        secretName: tls-rancher-ingress
+      # extraAnnotations:
+      #   cert-manager.io/issuer: letsencrypt-staging
+      #   cert-manager.io/issuer-kind: ClusterIssuer
+      # tls:
+      #   source: secret
+      #   secretName: tls-rancher-ingress
