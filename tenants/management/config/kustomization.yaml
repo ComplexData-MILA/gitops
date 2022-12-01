@@ -3,6 +3,7 @@ kind: Kustomization
 
 namespace: flux-system
 resources:
-  - ../../base/config
-  - ./cluster-secrets.sops.yaml
-  - ./cloudflare-secrets.sops.yaml
+  # - ../../base/config
+  - cluster-config.yaml
+  - cluster-secrets.sops.yaml
+  - cloudflare-secrets.sops.yaml
