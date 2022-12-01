@@ -1,0 +1,79 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: workload-ml
+  namespace: flux-system
+spec:
+  targetNamespace: cattle-system
+  releaseName: workload-ml
+  chart:
+    spec:
+      chart: charts/cluster-template-openstack
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+  dependsOn:
+    - name: rancher
+  interval: 1h
+  install:
+    remediation:
+      retries: -1
+  
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: OpenstackConfig
+            patch: |-
+              apiVersion: rke-machine-config.cattle.io/v1
+              kind: OpenstackConfig
+              metadata:
+                name: this-gets-ignored
+              
+              authUrl: ${OPENSTACK_AUTH_URL}
+              insecure: true
+              endpointType: publicURL
+              domainName: ${OPENSTACK_DOMAIN_NAME}
+              keypairName: ${OPENSTACK_KEYPAIR_NAME}
+              netName: ${OPENSTACK_TENANT_NAME}-network
+              region: RegionOne
+              secGroups: default,jacob-dev
+              sshPort: "22"
+              sshUser: ubuntu
+              tenantName: ${OPENSTACK_TENANT_NAME}
+              username: ${OPENSTACK_USERNAME}
+              privateKeyFile: |-
+                ${OPENSTACK_PRIVATE_KEY_FILE}
+      
+  values:
+    cluster:
+      name: cdlab-ml
+    cloudCredentialSecretName: "cattle-global-data:openstack-cloud-credential"
+    kubernetesVersion: v1.22.9+rke2r2
+    
+    monitoring:
+      enabled: true
+
+    nodepools:
+      - name: control
+        etcd: true
+        controlplane: true
+        worker: true # false
+
+        machineDeploymentAnnotations:
+          cluster.provisioning.cattle.io/autoscaler-resource-cpu: "2"
+          cluster.provisioning.cattle.io/autoscaler-resource-ephemeral-storage: 36Gi
+          cluster.provisioning.cattle.io/autoscaler-resource-memory: 7.5Gi
+        labels: {}
+        taints: {}
+        quantity: 1
+        paused: false
+        # specify displayName
+        # displayName: ""
+
+        availabilityZone: Compute
+        bootFromVolume: false
+        flavorName: c4-30gb-144 # c2-7.5gb-36
+        imageName: Ubuntu-20.04.5-Focal-x64-2022-08
+        volumeSize: "0"
