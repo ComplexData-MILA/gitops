@@ -40,3 +40,4 @@ spec:
           else
             kubectl patch nodedriver openstack --type=merge -p '{"spec": {"active": true } }'
             echo "management.cattle.io/v3/NodeDriver/openstack activated."
+          fi
