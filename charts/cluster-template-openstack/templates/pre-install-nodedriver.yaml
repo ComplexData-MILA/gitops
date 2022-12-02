@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-pre-install-nodedriver"
+  namespace: cattle-system
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}-pre-install-nodedriver"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: true
+      serviceAccountName: rancher
+      containers:
+      - name: wait-for-cluster
+        image: bitnami/kubectl:latest
+        command:
+        - /bin/sh
+        args:
+        - -c
+        - |
+          if [ "$(kubectl get nodedriver openstack -o jsonpath='{.spec.active}')" = "true" ]; then
+            echo "management.cattle.io/v3/NodeDriver/openstack already active."
+            exit 0
+          else
+            kubectl patch nodedriver openstack --type=merge -p '{"spec": {"active": true } }'
+            echo "management.cattle.io/v3/NodeDriver/openstack activated."
