@@ -24,23 +24,45 @@ spec:
           namespaces:
           - fleet-local
     preconditions:
-      any:
+      all:
       - key: "{{ request.object.status.ready || false }}"
         operator: Equals
         value: true
+      - key: "{{ request.object.status.clientSecretName || '' }}"
+        operator: NotEquals
+        value: ''
     context:
     - name: rancherToken
       apiCall:
         urlPath: "/api/v1/namespaces/{{request.object.metadata.namespace}}/secrets/{{request.object.status.clientSecretName}}"
         jmesPath: 'base64_decode(data.token)'
+    - name: rancherUrl
+      variable:
+        value: "https://rancher.cattle-system.svc.cluster.local"
+    - name: clusterName
+      variable:
+        jmesPath: 'to_string(request.object.metadata.name)'
+    - name: clusterNamespace
+      variable:
+        jmesPath: 'to_string(request.object.metadata.namespace)'
+    - name: cloudConfig
+      variable: 
+        value: |
+          url: {{rancherUrl}}
+          token: {{rancherToken}}
+          # name and namespace of the clusters.provisioning.cattle.io resource on the
+          # rancher server
+          clusterName: {{clusterName}}
+          clusterNamespace: {{clusterNamespace}}
     generate:
       apiVersion: v1
-      kind: ConfigMap
+      kind: Secret
       name: "{{request.object.metadata.name}}-autoscaler-cloud-config"
       namespace: "{{request.object.metadata.namespace}}"
       synchronize: true
       data:
-        kind: ConfigMap
+        kind: Secret
+        type: Opaque
         metadata:
           ownerReferences:
           - apiVersion: provisioning.cattle.io/v1
@@ -48,9 +70,18 @@ spec:
             name: "{{request.object.metadata.name}}"
             uid: "{{request.object.metadata.uid}}"
         data:
-          url: https://rancher.cattle-system.svc.cluster.local
-          token: "{{rancherToken}}"
-          # name and namespace of the clusters.provisioning.cattle.io resource on the
-          # rancher server
-          clusterName: "{{request.object.metadata.name}}"
-          clusterNamespace: "{{request.object.metadata.namespace}}"
+          cloud-config: "{{ cloudConfig | base64_encode(@) }}"
+        # kind: ConfigMap
+        # metadata:
+        #   ownerReferences:
+        #   - apiVersion: provisioning.cattle.io/v1
+        #     kind: Cluster
+        #     name: "{{request.object.metadata.name}}"
+        #     uid: "{{request.object.metadata.uid}}"
+        # data:
+        #   url: https://rancher.cattle-system.svc.cluster.local
+        #   token: "{{rancherToken}}"
+        #   # name and namespace of the clusters.provisioning.cattle.io resource on the
+        #   # rancher server
+        #   clusterName: "{{request.object.metadata.name}}"
+        #   clusterNamespace: "{{request.object.metadata.namespace}}"

@@ -19,12 +19,25 @@ spec:
         - resources:
             kinds:
             - provisioning.cattle.io/v1/Cluster
+    exclude:
+      any:
+      - resources:
+          namespaces:
+          - fleet-local
+    preconditions:
+      all:
+      - key: "{{ request.object.status.ready || false }}"
+        operator: Equals
+        value: true
+      - key: "{{ request.object.status.clientSecretName || '' }}"
+        operator: NotEquals
+        value: ''
     generate:
       apiVersion: v1
       kind: Secret
-      name: "{{request.object.metadata.name}}-kubeconfig"
-      namespace: flux-system # "{{request.object.metadata.name}}"
+      name: "{{ request.object.status.clientSecretName }}"
+      namespace: flux-system
       synchronize: true
       clone:
         namespace: "{{request.object.metadata.namespace}}"
-        name: "{{request.object.metadata.name}}-kubeconfig"
+        name: "{{request.object.status.clientSecretName}}"
