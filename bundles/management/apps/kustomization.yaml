@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
   - ../../../components/system-upgrade-controller
   - ../../../components/rancher
+  - ../../../components/rancher-backup
   - ../../../components/weave-gitops
