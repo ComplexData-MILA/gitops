@@ -1,0 +1,46 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: rancher-backup-crd
+  namespace: flux-system
+spec:
+  targetNamespace: cattle-resources-system
+  releaseName: rancher-backup-crd
+  dependsOn:
+    - name: rancher
+  chart:
+    spec:
+      chart: rancher-backup-crd
+      sourceRef:
+        kind: HelmRepository
+        name: rancher-charts
+        namespace: flux-system
+  interval: 1h0m0s
+  install:
+    remediation:
+      retries: -1
+  values: {}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: rancher-backup
+  namespace: flux-system
+spec:
+  targetNamespace: cattle-resources-system
+  releaseName: rancher-backup
+  dependsOn:
+    - name: rancher
+    - name: rancher-backup-crd
+  chart:
+    spec:
+      chart: rancher-backup
+      sourceRef:
+        kind: HelmRepository
+        name: rancher-charts
+        namespace: flux-system
+  interval: 1h0m0s
+  install:
+    remediation:
+      retries: -1
+  values: {}
