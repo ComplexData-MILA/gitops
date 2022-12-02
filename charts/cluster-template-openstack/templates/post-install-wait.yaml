@@ -38,9 +38,10 @@ spec:
         image: bitnami/kubectl:latest
         command:
         - kubectl
-        - -n fleet-default
+        - -n 
+        - fleet-default
         - wait
-        - --for condition=ready
+        - --for=condition=ready
         - --timeout=-1s
         - clusters
         - {{ .Values.cluster.name }}
