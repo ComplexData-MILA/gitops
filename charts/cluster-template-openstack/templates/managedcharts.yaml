@@ -1,3 +1,24 @@
+{{- range $index, $chart := .Values.managedCharts }}
+apiVersion: management.cattle.io/v3
+kind: ManagedChart
+metadata:
+  name: {{ $.Values.cluster.name }}-managed-{{ $chart.chart }}
+  namespace: fleet-default
+spec:
+  chart: "{{ $chart.chart }}"
+  repoName: "{{ $chart.repoName }}"
+  releaseName: "{{ $chart.releaseName }}"
+  version: "{{ $chart.version }}"
+  {{- if $chart.values }}
+  values: 
+{{ toYaml $chart.values | indent 4 }}
+  {{- end }}
+  defaultNamespace: "{{ $chart.defaultNamespace }}"
+  takeOwnership: {{ $chart.takeOwnership | default true }}
+  targets:
+  - clusterName: {{ $.Values.cluster.name }}
+---
+{{- end }}
 {{- if .Values.monitoring.enabled }}
 apiVersion: management.cattle.io/v3
 kind: ManagedChart
