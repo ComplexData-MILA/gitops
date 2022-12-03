@@ -30,9 +30,31 @@ spec:
   # specify rancher helm chart values deployed into downstream cluster
   # rancherValues: {}
   rkeConfig:
-    {{- if .Values.additionalManifest }}
-    additionalManifest: {{ toYaml $.Values.additionalManifest | nindent 4 }}
-    {{- end }}
+    additionalManifest: |-
+      {{- if .Values.additionalManifest }}
+      ---
+      {{ $.Values.additionalManifest | nindent 6 }}
+      {{- end }}
+      {{- range $index, $spec := .Values.additionalSecrets }}
+      {{- $secretNamespace := $spec.namespace | default $.Release.Namespace}}
+      {{- $secretObj := (lookup "v1" "Secret" $secretNamespace $spec.name) }}
+      {{- if $secretObj }}
+      ---
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: {{ $spec.name }}
+        namespace; {{ $spec.namespace }}
+      data: {{ $secretObj.data | toYaml | nindent 8 }}
+      {{- end }}
+      {{- end }}
+
+    
+    {{- /*
+    # {{- if .Values.additionalManifest }}
+    # additionalManifest: {{ toYaml $.Values.additionalManifest | nindent 4 }}
+    # {{- end }}
+    */}}
     {{- if ne .Values.cloudprovider "custom" }}
     machinePools:
     {{- if .Values.nodepools }} {{ range $index, $nodepool := .Values.nodepools }}
