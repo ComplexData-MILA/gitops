@@ -23,5 +23,14 @@ spec:
       # slackHookUrl: ""
       # slackUsername: ""
       annotateNodes: true
+    metrics:
+      create: true
     service:
-      port: 8081 # Kairos runs EdgeVPN on 8080
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8080"
+    hostNetwork: false
+
+    # service:
+    #   port: 8081 # Kairos runs EdgeVPN on 8080
