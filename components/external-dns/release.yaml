@@ -24,11 +24,11 @@ spec:
     policy: sync
   valuesFrom:
     - kind: Secret
-      name: cloudflare-secrets
+      name: global-secrets
       valuesKey: CLOUDFLARE_EMAIL
       targetPath: cloudflare.email
     - kind: Secret
-      name: cloudflare-secrets
+      name: global-secrets
       valuesKey: CLOUDFLARE_API_KEY
       targetPath: cloudflare.apiKey
     - kind: Secret
