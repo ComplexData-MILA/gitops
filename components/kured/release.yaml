@@ -23,3 +23,5 @@ spec:
       # slackHookUrl: ""
       # slackUsername: ""
       annotateNodes: true
+    service:
+      port: 8081 # Kairos runs EdgeVPN on 8080
